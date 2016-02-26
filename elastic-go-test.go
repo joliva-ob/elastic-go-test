@@ -90,14 +90,18 @@ func main() {
 	  }
 	}`
 
+	// URL parameters
+	args := make(map[string]interface{})
+	args["size"] = 5
+
 	// Elasticsearch Search
-	out, err := c.Search("onebox-order/couchbaseDocument", "", map[string]interface{} {"size" : 10}, searchJson)
+	out, err := c.Search("onebox-order/couchbaseDocument", "", args, searchJson)
 	if len(out.Hits.Hits) > 0	{
 
 		var order OrderType
 		var orders []*OrderType
 
-		for i := 0; i < out.Hits.Total-1; i++ {
+		for i := 0; i < out.Hits.Len(); i++ {
 
 			err := json.Unmarshal(*out.Hits.Hits[i].Source, &order)
 			if err != nil {
